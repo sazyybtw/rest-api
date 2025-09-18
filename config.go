@@ -15,7 +15,16 @@ type Config struct {
 
 var Envs = initConfig()
 
-//configurações
+func initConfig() Config {
+	return Config{
+		Port:       getEnv("PORT", "8080"),
+		DBUser:     getEnv("DB_USER", "root"),
+		DBName:     getEnv("DB_NAME", "managerdb"),
+		DBPassword: getEnv("DB_PASSWORD", "Lucawasd1004"),
+		DBAddress:  fmt.Sprintf("%s:%s", getEnv("DB_HOST", "127.0.0.1"), getEnv("DB_PORT", "3306")),
+		JWTSecret:  getEnv("JWT_SECRET", "randomjwtsecretkey"),
+	}
+}
 
 func getEnv(key, fallback string) string {
 	if value, ok := os.LookupEnv(key); ok {
