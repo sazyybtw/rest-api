@@ -1,0 +1,21 @@
+FROM golang:1.25.0 AS build-stage
+ WORKDIR /app
+
+ COPY go.mod go.sum z/
+ RUN go mod download
+
+ COPY *.go ./
+
+ RUN CGO_ENABLED=0 GOOS=linux go build -o main /api
+
+FROM build-stage AS run-test-stage
+ RUN go test -v ./...
+
+FROM scratch AS run-realese-stage
+ WORKDIR /app
+
+ COPY --from=build-stage /api /api
+
+ EXPOSE 8080
+
+ CMD ["/api"]
